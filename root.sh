@@ -58,6 +58,7 @@ echo root:$password | sudo chpasswd root
 sudo sed -i "s/^#\?Port.*/Port $sshport/g" /etc/ssh/sshd_config;
 sudo sed -i "s/^#\?PermitRootLogin.*/PermitRootLogin yes/g" /etc/ssh/sshd_config;
 sudo sed -i "s/^#\?PasswordAuthentication.*/PasswordAuthentication yes/g" /etc/ssh/sshd_config;
+sudo sed -i 's/^#\?KbdInteractiveAuthentication.*/KbdInteractiveAuthentication yes/g' /etc/ssh/sshd_config
 
 sudo service ssh restart >/dev/null 2>&1 # 某些VPS系统的ssh服务名称为ssh，以防无法重启服务导致无法立刻使用密码登录
 sudo service sshd restart >/dev/null 2>&1
