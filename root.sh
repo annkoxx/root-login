@@ -75,9 +75,11 @@ if [[ -n $v4 && -n $v6 ]]; then
 fi
 green "您的服务器用户名：root"
 green "您的服务器密码：$password"
-yellow "请妥善保存好登录信息！然后重启VPS确保设置已保存！"
+yellow "请妥善保存好登录信息！"
 
 # 计算当前日期并推算7天后的到期日期
 current_date=$(date +"%Y-%m-%d")
-expiry_date=$(date -d "$current_date + 7 days" +"%Y-%m-%d")
-yellow "服务器到期时间为 $expiry_date，请提前准备续费。"
+expiry_date=$(date -d "$current_date + 6 days" +"%Y-%m-%d")
+yellow "由于您购买按周付机器"
+yellow "服务器到期时间为 $expiry_date，请提前找 @banzang333 进行续费。"
+
