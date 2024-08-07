@@ -81,5 +81,6 @@ yellow "请妥善保存好登录信息！"
 current_date=$(date +"%Y-%m-%d")
 expiry_date=$(date -d "$current_date + 6 days" +"%Y-%m-%d")
 yellow "由于您购买按周付机器"
+yellow "⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇"
 yellow "服务器到期时间为 $expiry_date，请提前找 @banzang333 进行续费。"
 
