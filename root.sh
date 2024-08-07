@@ -71,8 +71,8 @@ if [[ -z $v4 && -n $v6 ]]; then
     green "VPS登录IP地址及端口为：$v6:$sshport"
 fi
 if [[ -n $v4 && -n $v6 ]]; then
-    green "VPS登录IP地址及端口为：$v4:$sshport 或 $v6:$sshport"
+    green "您的服务器IP和端口：$v4:$sshport 或 $v6:$sshport"
 fi
-green "用户名：root"
-green "密码：$password"
+green "您的服务器用户名：root"
+green "您的服务器密码：$password"
 yellow "请妥善保存好登录信息！然后重启VPS确保设置已保存！"
