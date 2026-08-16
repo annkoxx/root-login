@@ -89,18 +89,12 @@ fi
 
 green "无人值守设置：SSH 端口 $sshport，root 密码使用脚本内预设值。"
 
-# The upstream script used `chpasswd root`, which is invalid on common Linux
-# distributions. chpasswd reads the account and password from standard input.
 if ! printf 'root:%s\n' "$password" | chpasswd; then
     red "root 密码设置失败，未修改 SSH 配置。"
     exit 1
 fi
 
-backup="${sshd_config}.bak.root-unattended.$(date +%Y%m%d%H%M%S)"
-cp -a "$sshd_config" "$backup" || exit 1
 dropin=''
-dropin_backup=''
-dropin_existed=0
 
 set_sshd_option() {
     local key="$1"
@@ -124,11 +118,6 @@ set_sshd_option KbdInteractiveAuthentication yes
 if grep -Eq '^[[:space:]]*Include[[:space:]]+.*/sshd_config\.d/\*\.conf' "$sshd_config"; then
     mkdir -p /etc/ssh/sshd_config.d
     dropin='/etc/ssh/sshd_config.d/00-root-unattended.conf'
-    if [[ -e "$dropin" ]]; then
-        dropin_existed=1
-        dropin_backup="${dropin}.bak.$(date +%Y%m%d%H%M%S)"
-        cp -a "$dropin" "$dropin_backup" || exit 1
-    fi
     printf '%s\n' \
         "Port $sshport" \
         'PermitRootLogin yes' \
@@ -137,21 +126,9 @@ if grep -Eq '^[[:space:]]*Include[[:space:]]+.*/sshd_config\.d/\*\.conf' "$sshd_
     chmod 600 "$dropin"
 fi
 
-restore_sshd_config() {
-    cp -a "$backup" "$sshd_config"
-    if [[ -n "$dropin" ]]; then
-        if [[ "$dropin_existed" -eq 1 ]]; then
-            cp -a "$dropin_backup" "$dropin"
-        else
-            rm -f -- "$dropin"
-        fi
-    fi
-}
-
 mkdir -p /run/sshd >/dev/null 2>&1 || true
 if command -v sshd >/dev/null 2>&1 && ! sshd -t -f "$sshd_config"; then
-    restore_sshd_config
-    red "新的 SSH 配置校验失败，已经自动恢复：$backup"
+    red "新的 SSH 配置校验失败。"
     exit 1
 fi
 
@@ -170,8 +147,7 @@ if [[ "$restart_ok" -eq 0 ]] && command -v service >/dev/null 2>&1; then
 fi
 
 if [[ "$restart_ok" -eq 0 ]]; then
-    restore_sshd_config
-    red "SSH 服务重启失败，配置已经自动恢复：$backup"
+    red "SSH 服务重启失败。"
     exit 1
 fi
 
@@ -185,5 +161,7 @@ elif [[ -n "${v4:-}" && -n "${v6:-}" ]]; then
 fi
 green "用户名：root"
 green "密码：$password"
-yellow "SSH 配置备份：$backup"
-yellow "建议确认可以登录后，从服务器上删除这个含明文密码的脚本。"
+
+# 自动清理脚本文件
+rm -f "$0" ./root-guding.sh /root/root-guding.sh >/dev/null 2>&1 || true
+green "已自动清理本地脚本文件（root-guding.sh）。"
