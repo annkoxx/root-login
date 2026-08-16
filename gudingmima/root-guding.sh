@@ -25,7 +25,7 @@ if [[ "$(id -u)" -ne 0 ]]; then
 fi
 
 readonly sshport=22
-readonly password='AoQpAD@q3u0Hx0k2'
+readonly password='@pJ@RMTYrl5KwdSYg8Lm'
 readonly sshd_config='/etc/ssh/sshd_config'
 
 REGEX=("debian" "ubuntu" "centos|red hat|kernel|oracle linux|alma|rocky" "amazon linux" "alpine")
